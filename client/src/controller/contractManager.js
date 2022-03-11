@@ -4,7 +4,7 @@ const { ethers } = require("ethers");
 
 export function ContractManager() {
   let moneyVal;
-  let provider;
+  let [provider, setProvider] = useState();
   let [signer, setSigner] = useState();
   let networkId;
   let [contract, setContract] = useState();
@@ -12,14 +12,14 @@ export function ContractManager() {
   let [contractOwner, setContractOwner] = useState("");
   let [accounts, setAccounts] = useState();
   const [isloading, setLoading] = useState(true);
-  
 
   const connectMetamask = async () => {
     provider = new ethers.providers.Web3Provider(window.ethereum);
+    setProvider(provider);
     //const accounts = await provider.send("eth_requestAccounts", []);
     accounts = await provider.listAccounts();
+
     setAccounts(accounts);
-    console.log(accounts[0]);
     signer = provider.getSigner();
     setSigner(signer);
     networkId = await provider.getNetwork();
@@ -52,8 +52,8 @@ export function ContractManager() {
 
   const getMoney = async () => {
     const money = await contract.moneyPool();
-    setMoneyInPool(Math.floor(ethers.utils.formatEther(money)));
-    console.log('update');
+    setMoneyInPool(ethers.utils.formatEther(money));
+    console.log("update", ethers.utils.formatEther(money));
   };
 
   const startFunding = async () => {
@@ -73,11 +73,17 @@ export function ContractManager() {
   };
 
   const giveFund = async () => {
+    setLoading(true);
     console.log("give fund");
-    //ethers.utils.parseEther("1.0")
-    const tx = await contract.fundTo({ value: ethers.utils.parseEther("0.001") });
+
+    const contractSigner = await contract.connect(signer); //use this if send state changing to smart contract
+    const gasPrice = await provider.getGasPrice();
+    const tx = await contractSigner.fundTo({
+      value: ethers.utils.parseEther("0.1"),
+    });
     console.log(tx);
     await getMoney();
+    setLoading(false);
   };
 
   const closeFunding = async () => {
@@ -90,5 +96,6 @@ export function ContractManager() {
     startFunding,
     giveFund,
     closeFunding,
+    isloading,
   };
 }

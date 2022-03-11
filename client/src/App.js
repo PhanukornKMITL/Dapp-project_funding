@@ -6,12 +6,12 @@ import { ContractManager } from "./controller/contractManager.js";
 import { Button, Stack } from "@mui/material";
 
 function App() {
-  const { connectMetamask, moneyInPool, startFunding, giveFund, closeFunding,  } =
+  const { connectMetamask, moneyInPool, startFunding, giveFund, closeFunding, isloading  } =
     ContractManager();
-  const [isloading, setLoading] = useState(true);
+  
 
   useEffect(() => {
-    connectMetamask().then(() => setLoading(false));
+    connectMetamask();
   }, []);
 
   if (isloading) {
@@ -27,7 +27,7 @@ function App() {
         <header className="App-header"></header>
         <TopNav></TopNav>
         <GoalSlider value={moneyInPool ? moneyInPool : 0}></GoalSlider>
-        <h1>Money in pool {moneyInPool}</h1>
+        <h1>Money in pool {moneyInPool} ETH</h1>
         <Stack spacing={2} direction="row">
           <Button variant="contained" onClick={() => startFunding()}>
             Start Project Funding
