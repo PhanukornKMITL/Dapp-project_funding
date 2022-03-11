@@ -43,8 +43,8 @@ export function ContractManager() {
     console.log("networkData", networkData);
 
     contract = new ethers.Contract(networkData.address, FundingAbi.abi, wallet);
-    //contract.owner();
-    setContractOwner(contract.signer.address);
+    const owner = await contract.owner();
+    setContractOwner(owner);
     setContract(contract);
     await getMoney();
     setLoading(false);
@@ -63,25 +63,28 @@ export function ContractManager() {
       return;
     }
     console.log("start funding");
+    const owner = await contract.owner();
+    console.log("hello", contractOwner);
     if (accounts[0] == contractOwner) {
-      console.log("call");
-      const tx = await contract.startFunding();
+      const contractSigner = await contract.connect(signer); //use this if send state changing to smart contract
+      const tx = await contractSigner.startFunding();
       console.log("tx from startFunding", tx);
     } else {
       alert("only contract owner can use this function");
     }
   };
 
-  const giveFund = async () => {
+  const giveFund = async (value) => {
     setLoading(true);
     console.log("give fund");
 
     const contractSigner = await contract.connect(signer); //use this if send state changing to smart contract
     const gasPrice = await provider.getGasPrice();
     const tx = await contractSigner.fundTo({
-      value: ethers.utils.parseEther("0.1"),
+      value: ethers.utils.parseEther("0.1"), // value
     });
-    console.log(tx);
+    const result = await tx.wait();
+    console.log(result);
     await getMoney();
     setLoading(false);
   };
