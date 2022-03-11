@@ -1,7 +1,6 @@
 pragma solidity ^0.8.1;
 
 // SPDX-License-Identifier: GPL-3.0
-
 contract Funding {
     address public owner;
     uint256 public moneyPool;
