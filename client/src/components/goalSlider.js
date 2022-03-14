@@ -1,15 +1,15 @@
 import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
+import Typography from "@mui/material/Typography";
 
 function valuetext(value) {
   return `${value}°C`;
 }
 
 export default function GoalSlider(value) {
-  console.log("recieve", value.value);
   return (
-    <Box sx={{ width: 300 }}>
+    <Box sx={{ width: 300, m: 5 }}>
       <Slider
         aria-label="Temperature"
         defaultValue={30}
@@ -20,8 +20,12 @@ export default function GoalSlider(value) {
         min={10}
         max={110}
         value={value.value}
-        // disabled
+      // disabled
       />
-    </Box>
+      <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+        Pool value: {value.value} ETH
+      </Typography>
+
+    </Box >
   );
 }

@@ -24,14 +24,15 @@ export function ContractManager() {
     setSigner(signer);
     networkId = await provider.getNetwork();
     console.log("netid", networkId);
+
     // let accounts = provider.listAccounts()
     //                   .then(result => console.log(result))
     //                   .catch(error => console.log(error))
-    let balance = await provider.getBalance(
-      "0xBC8240200b543038B8EfEA521D7Ee43BD7B915b1"
-    );
-    let balanceEth = ethers.utils.formatEther(balance);
-    console.log("balance", balanceEth);
+    // let balance = await provider.getBalance(
+    //   "0xBC8240200b543038B8EfEA521D7Ee43BD7B915b1"
+    // );
+    // let balanceEth = ethers.utils.formatEther(balance);
+    // console.log("balance", balanceEth);
     await connectSmartContract();
   };
 
@@ -100,5 +101,6 @@ export function ContractManager() {
     giveFund,
     closeFunding,
     isloading,
+    accounts,
   };
 }
